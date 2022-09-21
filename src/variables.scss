@@ -1,0 +1,10 @@
+/* Variables and mixins declared here will be available in all other SCSS files */
+
+:root {
+    --primary: #5dbaf8;
+    --secondary: #676778;
+    --surface: rgba(255, 255, 255, 0.808);
+    --up-surface-1: rgba(207, 207, 207, 0.263);
+    --background: #fff;
+    --error: #ff3e00;
+}
