@@ -22,5 +22,4 @@ $: {
 </script>
 
 <ListSearch />
-{JSON.stringify(searchObj)}
 <ListResults {searchResults} {requesting} />
