@@ -10,12 +10,10 @@ import { BACKEND_MEDIA_URL } from "../../utils/consts";
 function get_top_categories() {
   if (entry.id.startsWith("business")) {
     // get the first 3 entry.business_categories
-    return entry.business_categories?.slice(0, 3).map((cat) => cat.name) || [];
+    return entry.business_categories?.slice(0, 3).map((cat) => cat) || [];
   } else if (entry.id.startsWith("institution")) {
     // get the first 3 entry.product_categories
-    return (
-      entry.institution_categories?.slice(0, 3).map((cat) => cat.name) || []
-    );
+    return entry.institution_categories?.slice(0, 3).map((cat) => cat) || [];
   }
 }
 
@@ -66,21 +64,35 @@ function get_avatars() {
         </div>
       </h3>
     </div>
-    <PrimaryAction>
-      <Media class="card-media-16x9" aspectRatio="16x9" />
-      <div class="avatars">
-        {#each get_avatars() as avatar}
-          <img
-            data-src={JSON.stringify(avatar)}
-            src={BACKEND_MEDIA_URL + avatar.url}
-            alt="avatar"
-            title={avatar.name}
-          />
-        {/each}
+    <div>
+      <div class="img-container">
+        <div class="avatars">
+          {#each get_avatars() as avatar}
+            <div class="avatar">
+              <img
+                data-src={JSON.stringify(avatar)}
+                src={BACKEND_MEDIA_URL + avatar.main_image.url}
+                alt="avatar"
+                width="50px"
+                height="50px"
+                title={avatar.name}
+              />
+            </div>
+          {/each}
+        </div>
+        <img
+          width="100%"
+          height="100%"
+          src={BACKEND_MEDIA_URL + entry?.main_image?.url}
+          alt={entry.name}
+          class="main-image"
+        />
       </div>
 
-      <Content style="color: #888;">{entry.description || ""}</Content>
-    </PrimaryAction>
+      <div class="content" style="color: #888;">
+        {entry.description || ""}
+      </div>
+    </div>
     <!-- <Media class="card-media-16x9" aspectRatio="16x9">
       <MediaContent>
         <h2
@@ -95,13 +107,52 @@ function get_avatars() {
 </div>
 
 <style lang="scss">
-.avatar {
-  display: "inline-block";
-  border: "2px solid white";
-  &:not(:first-of-type) {
-    //margin-left: -muiBaseTheme.spacing.unit;
+.img-container {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+
+  .main-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background-color: #888;
+  }
+
+  .avatars {
+    position: absolute;
+    top: -50%;
+    right: 0;
+    display: flex;
+    flex-wrap: wrap;
+    z-index: 10;
+    border: 1px solid red;
+    .avatar {
+      border: 2px solid white;
+      &:not(:first-of-type) {
+        margin-left: 2px;
+      }
+      img {
+        border-radius: 50%;
+      }
+    }
   }
 }
+.content {
+  padding: 1rem;
+  height: 75px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  // display: -webkit-box;
+  // -webkit-line-clamp: 3;
+  // -webkit-box-orient: vertical;
+  position: relative;
+}
+
 :global(.card-media-16x9) {
   background-image: var(--background);
   background-size: cover;
@@ -120,6 +171,7 @@ function get_avatars() {
     }
   }
 }
+
 :global(.smui-card__content) {
   line-height: 2;
   padding: 16px;
@@ -129,6 +181,25 @@ function get_avatars() {
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+  position: relative;
+  :global(.avatars) {
+    position: absolute;
+    top: -50%;
+    right: 0;
+    display: flex;
+    flex-wrap: wrap;
+    z-index: 10;
+    border: 1px solid red;
+    .avatar {
+      border: 2px solid white;
+      &:not(:first-of-type) {
+        margin-left: 2px;
+      }
+      img {
+        border-radius: 50%;
+      }
+    }
+  }
 }
 .categories {
   display: flex;
