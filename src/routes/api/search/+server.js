@@ -20,12 +20,22 @@ async function getBusinesses(search, location, businessCategories) {
 async function getCharities(search, location, charitiesCategories) {
   let client = get_meilisearch_client();
   let index = client.index('institution');
-  let searchResult = await index.search(search, {});
+  // if charitiesCategories is not empty, filter by categories, if location is not empty, order by location
+  // filters [institution_categories=charitiesCategories[0], institution_categories=charitiesCategories[1], ...]
+  let filters_array = undefined;
+  debugger;
   if (charitiesCategories) {
-    searchResult.hits = searchResult.hits.filter(
-      (item) => item.charities_categories && item.charities_categories.find((category) => charitiesCategories.includes(category.name)) !== undefined
-    );
+    filters_array = [charitiesCategories.map((category) => `institution_categories="${category}"`)];
   }
+  let searchResult = await index.search(search, {
+    filter: filters_array,
+  });
+  // debugger;
+  // if (charitiesCategories) {
+  //   searchResult.hits = searchResult.hits.filter(
+  //     (item) => item.institution_categories && item.institution_categories.find((category) => charitiesCategories.includes(category)) !== undefined
+  //   );
+  // }
   return searchResult.hits;
 }
 /** @type {import('./$types').RequestHandler} */
@@ -34,6 +44,7 @@ export async function POST({ request }) {
   const { search, location, businessCategories, charitiesCategories, filterGroup } = searchInfo;
   let businesses = [];
   let charities = [];
+  
   if(filterGroup === 'businesses' || filterGroup === 'all') {
     businesses = await getBusinesses(search, location, businessCategories);
   }

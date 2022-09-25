@@ -48,38 +48,21 @@ function get_avatars() {
     BACKEND_MEDIA_URL +
     entry?.main_image?.url +
     ");"}
+  data-type={entry.id.startsWith("business") ? "business" : "institution"}
 >
   <Card>
     <div style="padding: 1rem;">
-      <h2 class="mdc-typography--headline6" style="margin: 0;">
+      <h2
+        class="mdc-typography--headline6"
+        style="margin: 0;"
+        title={entry.name}
+      >
         {entry.name}
       </h2>
-      <h3 class="mdc-typography--subtitle2" style="margin: 0; color: #888;">
-        <div class="categories">
-          {#each get_top_categories() as cat}
-            <div class="category">
-              {cat}
-            </div>
-          {/each}
-        </div>
-      </h3>
+      <h3 class="mdc-typography--subtitle2" style="margin: 0; color: #888;" />
     </div>
     <div>
       <div class="img-container">
-        <div class="avatars">
-          {#each get_avatars() as avatar}
-            <div class="avatar">
-              <img
-                data-src={JSON.stringify(avatar)}
-                src={BACKEND_MEDIA_URL + avatar.main_image.url}
-                alt="avatar"
-                width="50px"
-                height="50px"
-                title={avatar.name}
-              />
-            </div>
-          {/each}
-        </div>
         <img
           width="100%"
           height="100%"
@@ -88,9 +71,29 @@ function get_avatars() {
           class="main-image"
         />
       </div>
-
-      <div class="content" style="color: #888;">
+      <div class="avatars">
+        {#each get_avatars() as avatar, i}
+          <div class="avatar" title={avatar.name} data-i={i}>
+            <img
+              data-src={JSON.stringify(avatar)}
+              src={BACKEND_MEDIA_URL + avatar.main_image.url}
+              alt="avatar"
+              width="50px"
+              height="50px"
+              title={avatar.name}
+            />
+          </div>
+        {/each}
+      </div>
+      <div class="content">
         {entry.description || ""}
+      </div>
+      <div class="categories">
+        {#each get_top_categories() as cat}
+          <div class="category">
+            {cat}
+          </div>
+        {/each}
       </div>
     </div>
     <!-- <Media class="card-media-16x9" aspectRatio="16x9">
@@ -107,6 +110,35 @@ function get_avatars() {
 </div>
 
 <style lang="scss">
+.content-wraper {
+  &[data-type="institution"] {
+    :global(.mdc-card) {
+      background-color: #bddde79f;
+    }
+  }
+  :global(.mdc-card) {
+    transition: all 0.3s ease-in-out;
+  }
+  &:hover {
+    :global(.mdc-card) {
+      //background-color: #e0dddd;
+      box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
+        rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+      color: black;
+    }
+    &[data-type="institution"] {
+      :global(.mdc-card) {
+        background-color: #8fb6c2b6;
+      }
+    }
+  }
+}
+.mdc-typography--headline6 {
+  // one line ellipses
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .img-container {
   position: relative;
   padding-bottom: 56.25%;
@@ -122,31 +154,63 @@ function get_avatars() {
     object-fit: cover;
     background-color: #888;
   }
+}
 
-  .avatars {
-    position: absolute;
-    top: -50%;
-    right: 0;
-    display: flex;
-    flex-wrap: wrap;
-    z-index: 10;
-    border: 1px solid red;
-    .avatar {
-      border: 2px solid white;
-      &:not(:first-of-type) {
-        margin-left: 2px;
-      }
+.avatars {
+  position: relative;
+  height: 0px;
+  right: 0;
+  display: flex;
+  flex-wrap: wrap;
+  z-index: 10;
+  margin: 0 10px;
+  transform: translateY(-25px);
+  .avatar {
+    img {
+      background-color: rgba(168, 167, 167, 0.782);
+      border-radius: 9999px;
+    }
+
+    //transform: translateY(-50%) + data-i * 15px;
+    &:nth-child(1) {
       img {
-        border-radius: 50%;
+        transform: translate(0px);
+      }
+    }
+    &:nth-child(2) {
+      img {
+        transform: translate(25px);
+      }
+    }
+    &:nth-child(3) {
+      img {
+        transform: translate(40px);
+      }
+    }
+    &:nth-child(4) {
+      img {
+        transform: translate(60px);
+      }
+    }
+    &:nth-child(5) {
+      img {
+        transform: translate(80px);
+      }
+    }
+    &:nth-child(6) {
+      img {
+        transform: translate(100px);
       }
     }
   }
 }
 .content {
   padding: 1rem;
-  height: 75px;
+  margin-top: 5px;
+  height: 100px;
   overflow: hidden;
   text-overflow: ellipsis;
+
   // display: -webkit-box;
   // -webkit-line-clamp: 3;
   // -webkit-box-orient: vertical;
@@ -189,7 +253,7 @@ function get_avatars() {
     display: flex;
     flex-wrap: wrap;
     z-index: 10;
-    border: 1px solid red;
+    //border: 1px solid red;
     .avatar {
       border: 2px solid white;
       &:not(:first-of-type) {
@@ -204,13 +268,38 @@ function get_avatars() {
 .categories {
   display: flex;
   flex-wrap: wrap;
+  font-size: 0.8rem;
   .category {
-    background-color: #888;
-    color: #fff;
+    // background-color: #4a5568;
+    // color: #fff;
+    // font-size: 0.875rem;
+    // background-color: #edf2f7;
+    // border-width: 0;
+    // border-style: solid;
+    // border-color: #e2e8f0;
     padding: 0.2rem 0.5rem;
-    border-radius: 0.5rem;
+    // border-radius: 0.5rem;
+    margin-top: 0.5rem;
     margin-right: 0.5rem;
     margin-bottom: 0.5rem;
+
+    -webkit-text-size-adjust: 100%;
+    line-height: 1.5;
+    font-family: "Poppins", sans-serif;
+    box-sizing: inherit;
+    border-width: 0;
+    border-style: solid;
+    border-color: #e2e8f0;
+    background-color: #edf2f7;
+    border-radius: 9999px;
+    display: inline-block;
+    font-weight: 600;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    color: #4a5568;
+    font-size: 0.875rem;
   }
 }
 </style>
