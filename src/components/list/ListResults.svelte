@@ -14,7 +14,8 @@ export let requesting;
         <Loading />
       {:else if searchResults}
         {#each searchResults as entry}
-          <ResultCard {entry} />
+          <!-- <ResultCard {entry} /> -->
+          {JSON.stringify(entry)}
         {/each}
       {:else}
         <Loading />
