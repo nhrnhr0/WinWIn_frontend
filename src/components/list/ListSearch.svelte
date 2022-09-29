@@ -20,6 +20,7 @@ import { onMount } from "svelte";
 import { searchParamsToSeachObject } from "../../utils/functions";
 import Loading from "../Loading.svelte";
 import PlaceHolder from "../PlaceHolder.svelte";
+import { GooglePlacesAutocomplete } from "@beyonk/svelte-googlemaps";
 
 export let businessCategoriesOptions;
 export let charitiesCategoriesOptions;
@@ -30,7 +31,6 @@ let charitiesCategoriesValue = undefined;
 let is_options_loaded = false;
 let selectedGeo = undefined;
 onMount(async () => {
-  debugger;
   if (!businessCategoriesOptions) {
     businessCategoriesOptions = await getBusinessCategoriesOptions();
   }
@@ -88,21 +88,6 @@ onMount(async () => {
     // trigger el change event
     el.dispatchEvent(new Event("input"));
   }
-  // el.addEventListener("focus", () => {
-  //   // show a current location button
-  //   // and a search button
-  //   // and a cancel button
-  //   let currentLocationBtn = document.createElement("button");
-  //   currentLocationBtn.innerText = "Current Location";
-  //   // currentLocationBtn:
-
-  //   // class = "current-location-btn";
-  //   currentLocationBtn.classList.add("current-location-btn");
-  //   if (el.parentElement.querySelector("button")) {
-  //     el.parentElement.removeChild(el.parentElement.querySelector("button"));
-  //   }
-  //   el.parentElement.appendChild(currentLocationBtn);
-  // });
 });
 
 function filterButtonClicked(e) {
@@ -127,7 +112,6 @@ function handle_search_click(e) {
   if (selectedGeo) {
     searchObject.selectedGeo = JSON.stringify(selectedGeo);
   }
-  debugger;
   if (locationhValue) {
     searchObject.locationhValue = locationhValue;
   }
@@ -185,13 +169,17 @@ let filterGroup = "all";
           </Textfield>
         </div>
         <div class="search-bar location-search-bar">
+          <!-- <GooglePlacesAutocomplete
+            apiKey={import.meta.env["VITE_MAPS_API_KEY"]}
+            language="iw"
+            tpyes="[]"
+          /> -->
           <Textfield
             bind:value={locationhValue}
             variant="outlined"
             label={"חיפוש באזור"}
             class="search-input"
           >
-            <!-- {#if selectedGeo == undefined} -->
             <Icon
               class="material-icons"
               slot="leadingIcon"
@@ -206,9 +194,7 @@ let filterGroup = "all";
                 close
               {/if}
             </Icon>
-            <!-- {:else}
-              <Icon class="material-icons" slot="trailingIcon">close</Icon>
-            {/if} -->
+
             <HelperText slot="helper">{"בחר מיקום מהרשימה"}</HelperText>
             <Button
               slot="trailingIcon"
@@ -216,7 +202,7 @@ let filterGroup = "all";
               on:click={() => {
                 // get current location
                 // and set it to locationhValue
-                alert("get current location");
+
                 navigator.geolocation.getCurrentPosition((position) => {
                   let lat = position.coords.latitude;
                   let lng = position.coords.longitude;
@@ -234,25 +220,6 @@ let filterGroup = "all";
               class="search-location-btn">המיקום שלי</Button
             >
           </Textfield>
-          <!-- selectedGeo: {JSON.stringify(selectedGeo)} -->
-          <!-- <Autocomplete
-            textfield$variant="outlined"
-            bind:locationhValue
-            showMenuWithNoInput={true}
-            label="Location"
-          >
-            <Text
-              slot="loading"
-              style="display: flex; width: 100%; justify-content: center; align-items: center;"
-            >
-              <CircularProgress
-                style="height: 24px; width: 24px;"
-                indeterminate
-              />
-            </Text>
-          </Autocomplete> 
-          <pre class="status">Selected: {locationhValue || ""}</pre>
-          -->
         </div>
       </div>
       <div class="split-buttons">
@@ -329,9 +296,10 @@ let filterGroup = "all";
   border-radius: 35px;
 }
 .list-search-component {
-  max-width: 90%;
+  width: 95%;
   margin: auto;
-  margin-top: 20px;
+
+  // margin-top: 20px;
   // background-color: var(--serfuce) darker
   //background: var(--up-surface-1);
   border-radius: 10px;
@@ -361,7 +329,7 @@ let filterGroup = "all";
     flex-direction: row-reverse;
     justify-content: center;
     align-items: center;
-    margin-top: 20px;
+    // margin-top: 20px;
     :global(.smui-button__group) {
       direction: ltr;
     }
@@ -371,7 +339,7 @@ let filterGroup = "all";
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    margin-top: 20px;
+    margin-top: 5px;
     :global(.selectContainer) {
       width: 100%;
       max-width: 500px;
@@ -381,7 +349,7 @@ let filterGroup = "all";
   .serach-btn {
     display: flex;
     justify-content: center;
-    margin-top: 20px;
+    margin-top: 5px;
     :global(button) {
       width: 100%;
       max-width: 500px;

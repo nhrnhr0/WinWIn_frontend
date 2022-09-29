@@ -22,16 +22,26 @@ $: {
 }
 </script>
 
-<ListSearch />
-<div class="results-wraper">
-  <ListResults {searchResults} {requesting} />
-  <ListResultsMap {searchResults} {requesting} />
+<div class="page-wraper">
+  <ListSearch />
+  <div class="results-wraper">
+    <ListResults {searchResults} {requesting} />
+    <ListResultsMap {searchResults} {requesting} />
+  </div>
 </div>
 
 <style lang="scss">
-.results-wraper {
+.page-wraper {
+  height: 100vh;
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  flex-direction: column;
+  overflow: hidden;
+  .results-wraper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    overflow: hidden;
+    flex: 1;
+  }
 }
 </style>

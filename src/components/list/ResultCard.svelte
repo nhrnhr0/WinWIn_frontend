@@ -18,19 +18,6 @@ function get_top_categories() {
 }
 
 export let entry;
-function elipses(str, max = 75) {
-  if (str) {
-    let ret = str.length > max ? str.slice(0, max - 3) + "..." : str;
-    if (ret.length !== max) {
-      // add the end with spaces
-      let spaces = max - ret.length;
-      ret = ret.padEnd(spaces + ret.length, " ");
-    }
-    return ret;
-  } else {
-    return "";
-  }
-}
 
 function get_avatars() {
   if (entry.id.startsWith("business")) {
@@ -42,12 +29,15 @@ function get_avatars() {
 </script>
 
 <!-- data-src={BACKEND_MEDIA_URL + entry?.image} -->
-<div
+<a
   class="content-wraper"
   style={"--background: url(" +
     BACKEND_MEDIA_URL +
     entry?.main_image?.url +
     ");"}
+  href={entry.id.startsWith("business")
+    ? "/business/" + entry.slug
+    : "/institution/" + entry.slug}
   data-type={entry.id.startsWith("business") ? "business" : "institution"}
 >
   <Card>
@@ -59,14 +49,14 @@ function get_avatars() {
       >
         {entry.name}
       </h2>
-      <h3 class="mdc-typography--subtitle2" style="margin: 0; color: #888;" />
+      <!-- <h3 class="mdc-typography--subtitle2" style="margin: 0; color: #888;" /> -->
     </div>
     <div>
       <div class="img-container">
         <img
           width="100%"
           height="100%"
-          src={BACKEND_MEDIA_URL + entry?.main_image?.url}
+          src={BACKEND_MEDIA_URL + entry?.header_image?.url}
           alt={entry.name}
           class="main-image"
         />
@@ -76,7 +66,9 @@ function get_avatars() {
           <div class="avatar" title={avatar.name} data-i={i}>
             <img
               data-src={JSON.stringify(avatar)}
-              src={BACKEND_MEDIA_URL + avatar.main_image.url}
+              src={avatar?.favicon?.url
+                ? BACKEND_MEDIA_URL + avatar?.favicon?.url
+                : ""}
               alt="avatar"
               width="50px"
               height="50px"
@@ -107,10 +99,12 @@ function get_avatars() {
       </MediaContent>
     </Media> -->
   </Card>
-</div>
+</a>
 
 <style lang="scss">
 .content-wraper {
+  text-decoration: none;
+  color: black;
   &[data-type="institution"] {
     :global(.mdc-card) {
       background-color: #bddde79f;
