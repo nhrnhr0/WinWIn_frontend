@@ -31,10 +31,18 @@ export let requesting;
   margin: auto;
   border-radius: 10px;
   padding: 20px;
+  width: auto;
+  height: auto;
+  :global(.smui-paper) {
+    :global(.smui-paper__content) {
+    }
+  }
   :global(.smui-paper) {
     :global(.smui-paper__content) {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+
+      // 1 item per row
+      grid-template-columns: 300px;
 
       grid-gap: 20px;
     }

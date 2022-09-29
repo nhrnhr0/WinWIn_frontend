@@ -9,7 +9,9 @@ import Select from "svelte-select";
 import { goto } from "$app/navigation";
 import Paper, { Title, Subtitle, Content } from "@smui/paper";
 import { page } from "$app/stores";
-
+import Autocomplete from "@smui-extra/autocomplete";
+import { Text } from "@smui/list";
+import CircularProgress from "@smui/circular-progress";
 import {
   getBusinessCategoriesOptions,
   getCharitiesCategoriesOptions,
@@ -26,7 +28,9 @@ let locationhValue = "";
 let businessCategoriesValue = undefined;
 let charitiesCategoriesValue = undefined;
 let is_options_loaded = false;
+let selectedGeo = undefined;
 onMount(async () => {
+  debugger;
   if (!businessCategoriesOptions) {
     businessCategoriesOptions = await getBusinessCategoriesOptions();
   }
@@ -49,10 +53,56 @@ onMount(async () => {
   // filterGroup = params.get("filterGroup") || "all";
   const searchObj = searchParamsToSeachObject($page.url.searchParams);
   searchValue = searchObj.search || "";
-  locationhValue = searchObj.location || "";
+  locationhValue = searchObj.locationhValue || "";
+  if (searchObj.selectedGeo) {
+    selectedGeo = searchObj.selectedGeo;
+  }
   businessCategoriesValue = searchObj.businessCategories || undefined;
   charitiesCategoriesValue = searchObj.charitiesCategories || undefined;
   filterGroup = searchObj.filterGroup || "all";
+
+  let el = document.querySelector(".location-search-bar input");
+
+  let autocomplete = new google.maps.places.Autocomplete(el, {
+    types: [],
+    language: "iw",
+  });
+
+  autocomplete.addListener("place_changed", () => {
+    let place = autocomplete.getPlace();
+    locationhValue = place.formatted_address;
+    selectedGeo = place.geometry.location;
+    //alert(locationhValue);
+  });
+  el.addEventListener("input", function (e) {
+    // if there is any input, hide search-location-btn, atherwise show it
+    if (e.target.value.length > 1) {
+      // hide search-location-btn
+      document.querySelector(".search-location-btn").style.display = "none";
+    } else {
+      // show search-location-btn
+      document.querySelector(".search-location-btn").style.display = "block";
+    }
+  });
+  if (selectedGeo) {
+    // trigger el change event
+    el.dispatchEvent(new Event("input"));
+  }
+  // el.addEventListener("focus", () => {
+  //   // show a current location button
+  //   // and a search button
+  //   // and a cancel button
+  //   let currentLocationBtn = document.createElement("button");
+  //   currentLocationBtn.innerText = "Current Location";
+  //   // currentLocationBtn:
+
+  //   // class = "current-location-btn";
+  //   currentLocationBtn.classList.add("current-location-btn");
+  //   if (el.parentElement.querySelector("button")) {
+  //     el.parentElement.removeChild(el.parentElement.querySelector("button"));
+  //   }
+  //   el.parentElement.appendChild(currentLocationBtn);
+  // });
 });
 
 function filterButtonClicked(e) {
@@ -70,13 +120,33 @@ function handle_search_click(e) {
   // and redirect to it
   let searchObject = {
     search: searchValue,
-    location: locationhValue,
-    businessCategories:
-      businessCategoriesValue?.map((item) => item.value) || "",
-    charitiesCategories:
-      charitiesCategoriesValue?.map((item) => item.value) || "",
     filterGroup: filterGroup,
   };
+  // if selectedGeo
+  // location: selectedGeo,
+  if (selectedGeo) {
+    searchObject.selectedGeo = JSON.stringify(selectedGeo);
+  }
+  debugger;
+  if (locationhValue) {
+    searchObject.locationhValue = locationhValue;
+  }
+  //if  businessCategories
+  // businessCategories: businessCategoriesValue?.map((item) => item.value) || "",
+  if (businessCategoriesValue) {
+    searchObject.businessCategories = businessCategoriesValue?.map(
+      (item) => item.value
+    );
+  }
+
+  // if charitiesCategories
+  // charitiesCategories: charitiesCategoriesValue?.map((item) => item.value) || "",
+  if (charitiesCategoriesValue) {
+    searchObject.charitiesCategories = charitiesCategoriesValue?.map(
+      (item) => item.value
+    );
+  }
+
   let searchParams = new URLSearchParams(searchObject);
   let url = "/list?" + searchParams.toString();
   console.log(url);
@@ -114,16 +184,75 @@ let filterGroup = "all";
             >
           </Textfield>
         </div>
-        <div class="search-bar">
+        <div class="search-bar location-search-bar">
           <Textfield
             bind:value={locationhValue}
             variant="outlined"
             label={"חיפוש באזור"}
             class="search-input"
           >
-            <Icon class="material-icons" slot="leadingIcon">location_on</Icon>
+            <!-- {#if selectedGeo == undefined} -->
+            <Icon
+              class="material-icons"
+              slot="leadingIcon"
+              on:click={() => {
+                document.querySelector(".location-search-bar input").value = "";
+                selectedGeo = undefined;
+              }}
+            >
+              {#if selectedGeo == undefined}
+                location_on
+              {:else}
+                close
+              {/if}
+            </Icon>
+            <!-- {:else}
+              <Icon class="material-icons" slot="trailingIcon">close</Icon>
+            {/if} -->
             <HelperText slot="helper">{"בחר מיקום מהרשימה"}</HelperText>
+            <Button
+              slot="trailingIcon"
+              variant="raised"
+              on:click={() => {
+                // get current location
+                // and set it to locationhValue
+                alert("get current location");
+                navigator.geolocation.getCurrentPosition((position) => {
+                  let lat = position.coords.latitude;
+                  let lng = position.coords.longitude;
+                  let url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${
+                    import.meta.env["VITE_MAPS_API_KEY"]
+                  }`;
+                  fetch(url)
+                    .then((res) => res.json())
+                    .then((data) => {
+                      locationhValue = data.results[0].formatted_address;
+                      selectedGeo = data.results[0].geometry.location;
+                    });
+                });
+              }}
+              class="search-location-btn">המיקום שלי</Button
+            >
           </Textfield>
+          <!-- selectedGeo: {JSON.stringify(selectedGeo)} -->
+          <!-- <Autocomplete
+            textfield$variant="outlined"
+            bind:locationhValue
+            showMenuWithNoInput={true}
+            label="Location"
+          >
+            <Text
+              slot="loading"
+              style="display: flex; width: 100%; justify-content: center; align-items: center;"
+            >
+              <CircularProgress
+                style="height: 24px; width: 24px;"
+                indeterminate
+              />
+            </Text>
+          </Autocomplete> 
+          <pre class="status">Selected: {locationhValue || ""}</pre>
+          -->
         </div>
       </div>
       <div class="split-buttons">
@@ -192,6 +321,13 @@ let filterGroup = "all";
 </div>
 
 <style lang="scss">
+:global(.search-location-btn) {
+  //transform: translateY(-50%);
+  margin: auto;
+  width: 50%;
+  margin-left: 5px;
+  border-radius: 35px;
+}
 .list-search-component {
   max-width: 90%;
   margin: auto;

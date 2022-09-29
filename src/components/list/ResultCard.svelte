@@ -205,9 +205,9 @@ function get_avatars() {
   }
 }
 .content {
-  padding: 1rem;
-  margin-top: 5px;
-  height: 100px;
+  padding: 0.5rem;
+  margin-top: 10px;
+  height: 35px;
   overflow: hidden;
   text-overflow: ellipsis;
 

@@ -23,7 +23,6 @@ async function getCharities(search, location, charitiesCategories) {
   // if charitiesCategories is not empty, filter by categories, if location is not empty, order by location
   // filters [institution_categories=charitiesCategories[0], institution_categories=charitiesCategories[1], ...]
   let filters_array = undefined;
-  debugger;
   if (charitiesCategories) {
     filters_array = [charitiesCategories.map((category) => `institution_categories="${category}"`)];
   }

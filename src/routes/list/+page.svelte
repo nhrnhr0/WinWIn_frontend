@@ -5,6 +5,7 @@ import { request_search } from "../../components/list/list-apis";
 import ListResults from "../../components/list/ListResults.svelte";
 import { searchParamsToSeachObject } from "./../../utils/functions";
 import { browser } from "$app/environment";
+import ListResultsMap from "../../components/list/ListResultsMap.svelte";
 
 let searchObj = {};
 let requesting = false;
@@ -22,4 +23,15 @@ $: {
 </script>
 
 <ListSearch />
-<ListResults {searchResults} {requesting} />
+<div class="results-wraper">
+  <ListResults {searchResults} {requesting} />
+  <ListResultsMap {searchResults} {requesting} />
+</div>
+
+<style lang="scss">
+.results-wraper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+</style>

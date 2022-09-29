@@ -5,7 +5,8 @@ export function searchParamsToSeachObject(searchParams) {
     
   const searchObject = {
     search: searchParams.get("search") || "",
-    location: searchParams.get("location") || "",
+    locationhValue: searchParams.get("locationhValue") || "",
+    selectedGeo: JSON.parse(searchParams.get("selectedGeo", {})) || "",
     businessCategories:
       searchParams.get("businessCategories") &&
       searchParams.get("businessCategories") != ""
