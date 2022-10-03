@@ -2,41 +2,66 @@
 import { page } from "$app/stores";
 import AddressHeaderLabel from "../../../components/comps/AddressHeaderLabel.svelte";
 import HeadingHighlights from "../../../components/comps/HeadingHighlights.svelte";
+import PhotoGallery from "../../../components/comps/PhotoGallery.svelte";
 import UpperSocialButtons from "../../../components/comps/UpperSocialButtons.svelte";
 import { BACKEND_MEDIA_URL } from "../../../utils/consts";
 export let slug;
 export let data;
 </script>
 
-<main>
-  <div class="header-content">
-    <div class="heading-box">
-      <div class="logo">
-        <img
-          src={BACKEND_MEDIA_URL + data?.favicon?.data?.attributes?.url}
-          alt={data.name}
-          width="80"
-          height="80"
-          class="logo-img"
-        />
-      </div>
-      <div class="headings">
-        <h1 class="title">
-          {data.name}
-        </h1>
+<div class="page-wraper">
+  <div class="map-and-contact">hey</div>
+  <main>
+    <div class="header-content-wraper">
+      <div class="header-content">
+        <div class="heading-box">
+          <div class="logo">
+            <img
+              src={BACKEND_MEDIA_URL + data?.favicon?.data?.attributes?.url}
+              alt={data.name}
+              width="80"
+              height="80"
+              class="logo-img"
+            />
+          </div>
+          <div class="headings">
+            <h1 class="title">
+              {data.name}
+            </h1>
 
-        <HeadingHighlights cats={data?.business_categories?.data} />
-        <AddressHeaderLabel address={data?.address} />
+            <HeadingHighlights cats={data?.business_categories?.data} />
+            <AddressHeaderLabel address={data?.address} />
+          </div>
+        </div>
       </div>
+      <UpperSocialButtons entry={data} />
     </div>
+  </main>
+
+  <div class="photo-gallery">
+    <PhotoGallery entry={data} />
   </div>
-  <UpperSocialButtons entry={data} />
-</main>
+</div>
 
 <style lang="scss">
+.page-wraper {
+  display: grid;
+  // photo gallery | <main> | map+contact
+  grid-template-columns: 2fr 3fr 2fr;
+  gap: 10px;
+}
+.photo-gallery {
+  margin-top: 90px;
+  margin-left: 5px;
+  //padding: 5px;
+}
 main {
   @media (min-width: 81.25em) {
     max-width: 1300px;
+  }
+  display: flex;
+
+  .header-content-wraper {
   }
   background-color: rgba(240, 240, 240, 0.774);
   margin: auto;
@@ -44,6 +69,7 @@ main {
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+
   .header-content {
     margin: 0;
     padding: 0;

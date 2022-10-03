@@ -9,3 +9,9 @@ html,body {
 body {
     overflow-x: hidden;
 }
+
+#bp_container {
+    img {
+        min-width: 35vw;
+    }
+}
