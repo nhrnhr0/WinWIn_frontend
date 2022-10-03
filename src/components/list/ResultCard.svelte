@@ -41,14 +41,11 @@ function get_avatars() {
   data-type={entry.id.startsWith("business") ? "business" : "institution"}
 >
   <Card>
-    <div style="padding: 1rem;">
-      <h2
-        class="mdc-typography--headline6"
-        style="margin: 0;"
-        title={entry.name}
-      >
+    <div class="card-header">
+      <h2 class="card-title" style="margin: 0;" title={entry.name}>
         {entry.name}
       </h2>
+      <p>{entry.address}</p>
       <!-- <h3 class="mdc-typography--subtitle2" style="margin: 0; color: #888;" /> -->
     </div>
     <div>
@@ -127,12 +124,12 @@ function get_avatars() {
     }
   }
 }
-.mdc-typography--headline6 {
-  // one line ellipses
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
+// .mdc-typography--headline6 {
+//   // one line ellipses
+//   overflow: hidden;
+//   text-overflow: ellipsis;
+//   white-space: nowrap;
+// }
 .img-container {
   position: relative;
   padding-bottom: 56.25%;
@@ -211,16 +208,24 @@ function get_avatars() {
   position: relative;
 }
 
+.card-header {
+  .card-title {
+    transition: cubic-bezier(0.6, -0.28, 0.735, 0.045) 0.2s;
+    width: 100%;
+    //line-height: 2.5;
+    padding: 0 1rem;
+    margin: 0;
+  }
+  p {
+    margin: 10px 10px 0 0;
+  }
+}
+
 :global(.card-media-16x9) {
   background-image: var(--background);
   background-size: cover;
   background-position: center;
   max-width: 100%;
-  .mdc-typography--headline6 {
-    transition: cubic-bezier(0.6, -0.28, 0.735, 0.045) 0.2s;
-    width: 100%;
-    line-height: 2.5;
-  }
 
   &:hover {
     .mdc-typography--headline6 {

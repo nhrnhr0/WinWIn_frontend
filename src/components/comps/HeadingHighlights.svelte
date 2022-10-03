@@ -5,28 +5,42 @@ export let cats;
 <div class="highlights">
   {#if cats}
     {#each cats as cat}
-      <span class="cat">
+      <div class="cat">
         {cat.attributes.name}
-      </span>
+      </div>
     {/each}
+    <div class="final-space" />
   {/if}
 </div>
 
 <style lang="scss">
 .highlights {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   font-size: 1rem;
   margin: 4px 0 0;
   color: #454545;
+  // overflow auto / scroll
+  max-width: 100%;
+  overflow: auto; // margin-left: 55px;
+  //set horizontal scroll bar width to 0
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
   @media screen and (min-width: 34em) {
     justify-content: flex-start;
     margin: 4px -8px 0 0;
   }
-  > span {
+  > div.cat {
     position: relative;
     margin: 0 10px 0 8px;
-    &::after {
+    // text in one line
+    white-space: nowrap;
+
+    &::before {
       top: 50%;
       right: auto;
       bottom: auto;
@@ -39,6 +53,10 @@ export let cats;
       border-radius: 50%;
       background-color: #a8a8a8;
     }
+  }
+
+  .final-space {
+    margin-left: 150px;
   }
 }
 </style>
