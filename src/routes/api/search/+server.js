@@ -10,7 +10,8 @@ async function getBusinesses(search, selectedGeo, businessCategories) {
   let index = client.index('business');
   let fitlers_array = undefined;
   if (businessCategories) {
-    fitlers_array = businessCategories.map((category) => `business_categories=${category}`);
+    //filters_array = [charitiesCategories.map((category) => `institution_categories="${category}"`)];
+    fitlers_array = [businessCategories.map((category) => `business_categories="${category}"`)];
   }
   //selectedGeo
   let sort = undefined;
@@ -60,20 +61,17 @@ export async function POST({ request }) {
   const { search, location, businessCategories, charitiesCategories, filterGroup,selectedGeo } = searchInfo;
   let businesses = [];
   let charities = [];
-  
+  let businesses_promise;
+  let charities_promise;
   if(filterGroup === 'businesses' || filterGroup === 'all') {
-    businesses = await getBusinesses(search, selectedGeo, businessCategories);
+    businesses_promise = getBusinesses(search, selectedGeo, businessCategories);
   }
   if (filterGroup === 'charities' || filterGroup === 'all') {
-    charities = await getCharities(search, selectedGeo, charitiesCategories);
+    charities_promise = getCharities(search, selectedGeo, charitiesCategories);
   }
-  // if(filterGroup === 'charities' || filterGroup === 'all') {
-  //   const charities = await getCharities(search, location, charitiesCategories);
-  // }
-
-  console.log('businesses', businesses);
-  console.log('charities', charities);
-  // merge businesses and charities on createdAt
+  [businesses, charities] = await Promise.all([businesses_promise, charities_promise]);
+  businesses = businesses || [];
+  charities = charities || [];
   const merged = [...businesses, ...charities].sort((a, b) => b.createdAt - a.createdAt);
   return json(merged);
 }

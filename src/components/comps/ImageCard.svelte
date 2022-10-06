@@ -5,9 +5,10 @@ export let image_url = undefined;
 export let link = undefined;
 export let alt = undefined;
 export let content = undefined;
+export let data_type = "institution";
 </script>
 
-<a class="content-wraper" href={link || "#"} data-type="institution">
+<a class="content-wraper" href={link || "#"} data-type={data_type}>
   <Card>
     <div>
       <div class="img-container">
@@ -66,6 +67,11 @@ export let content = undefined;
   &[data-type="institution"] {
     :global(.mdc-card) {
       background-color: #bddde79f;
+    }
+  }
+  &[data-type="business"] {
+    :global(.mdc-card) {
+      background-color: #f7f7f79f;
     }
   }
   :global(.mdc-card) {

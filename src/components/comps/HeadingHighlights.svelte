@@ -9,7 +9,7 @@ export let cats;
         {cat.attributes.name}
       </div>
     {/each}
-    <div class="final-space" />
+    <span class="final-space" />
   {/if}
 </div>
 
@@ -54,7 +54,6 @@ export let cats;
       background-color: #a8a8a8;
     }
   }
-
   .final-space {
     margin-left: 150px;
   }

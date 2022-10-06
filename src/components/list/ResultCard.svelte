@@ -107,6 +107,11 @@ function get_avatars() {
       background-color: #bddde79f;
     }
   }
+  &[data-type="business"] {
+    :global(.mdc-card) {
+      background-color: #ffffff9f;
+    }
+  }
   :global(.mdc-card) {
     transition: all 0.3s ease-in-out;
   }

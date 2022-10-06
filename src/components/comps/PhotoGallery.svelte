@@ -94,7 +94,7 @@ $: {
     @media screen and (min-width: 50em) {
       margin-top: 4px;
       min-height: 110px;
-      max-height: 110px;
+      // max-height: 110px;
       border-radius: 4px;
     }
 
@@ -103,7 +103,7 @@ $: {
     display: flex;
     width: 100%;
     min-height: 180px;
-    max-height: 180px;
+    // max-height: 180px;
     margin-top: 0;
     .strip-item {
       flex: 1;

@@ -3,8 +3,8 @@ import { compile } from 'mdsvex';
 
 export function load({ params }) {
   let slug = params.slug;
-  let popstr = 'populate=favicon,contact_info,header_image,images,opening_hours,institutions,institutions.favicon,institutions.contact_info,institutions.header_image,frequently_asked_questions,business_categories';
-    let url = BACKEND_URL + '/api/businesses?filters[slug][$eq]=' + slug + '&' + popstr;
+  let popstr = 'populate=favicon,contact_info,header_image,images,opening_hours,businesses,businesses.favicon,businesses.contact_info,businesses.header_image,frequently_asked_questions,institution_categories';
+    let url = BACKEND_URL + '/api/institutions?filters[slug][$eq]=' + slug + '&' + popstr;
     console.log(url);
     // let url = `${BACKEND_URL}/api/business/${encodeURIComponent(slug)}?populate=*`;
     return fetch(url).then(res => res.json().then(info => {

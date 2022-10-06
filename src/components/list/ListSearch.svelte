@@ -73,6 +73,7 @@ onMount(async () => {
     locationhValue = place.formatted_address;
     selectedGeo = place.geometry.location;
     //alert(locationhValue);
+    handle_search_click();
   });
   el.addEventListener("input", function (e) {
     // if there is any input, hide search-location-btn, atherwise show it
@@ -93,6 +94,7 @@ onMount(async () => {
 function filterButtonClicked(e) {
   console.log("filterButtonClicked");
   filterGroup = e.currentTarget.value;
+  handle_search_click();
 }
 
 function handle_search_click(e) {
@@ -158,6 +160,7 @@ let filterGroup = "all";
         <div class="search-bar">
           <Textfield
             bind:value={searchValue}
+            on:change={handle_search_click}
             variant="outlined"
             label={"חפש לפי מילות מפתח"}
             class="search-input"
@@ -184,8 +187,12 @@ let filterGroup = "all";
               class="material-icons"
               slot="leadingIcon"
               on:click={() => {
-                document.querySelector(".location-search-bar input").value = "";
+                let el = document.querySelector(".location-search-bar input");
+                el.value = "";
+                // trigger el change event
+                el.dispatchEvent(new Event("input"));
                 selectedGeo = undefined;
+                handle_search_click();
               }}
             >
               {#if selectedGeo == undefined}
@@ -214,6 +221,7 @@ let filterGroup = "all";
                     .then((data) => {
                       locationhValue = data.results[0].formatted_address;
                       selectedGeo = data.results[0].geometry.location;
+                      handle_search_click();
                     });
                 });
               }}
@@ -265,6 +273,7 @@ let filterGroup = "all";
           <Select
             items={charitiesCategoriesOptions}
             isMulti={true}
+            on:select={handle_search_click}
             placeholder="בחר קטגוריות עמותות"
             isDisabled={filterGroup == "businesses"}
             groupBy={(item) => item?.group || ""}
@@ -273,6 +282,7 @@ let filterGroup = "all";
           <Select
             items={businessCategoriesOptions}
             isMulti={true}
+            on:select={handle_search_click}
             placeholder="בחר קטגוריות עסקים"
             isDisabled={filterGroup == "charities"}
             groupBy={(item) => item?.group || ""}

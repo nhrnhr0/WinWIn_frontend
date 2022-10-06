@@ -40,7 +40,7 @@ export let data;
               {data.name}
             </h1>
 
-            <HeadingHighlights cats={data?.business_categories?.data} />
+            <HeadingHighlights cats={data?.institution_categories?.data} />
             <AddressHeaderLabel address={data?.address} />
           </div>
         </div>
@@ -49,14 +49,15 @@ export let data;
     </div>
 
     <!--instatutions: -->
-    <h2 class="helpers-title">רשימת עמותות שעסק תומך בהם:</h2>
+    <h2 class="helpers-title">רשימת עסקים שהעמותה בקשר איתם:</h2>
     <div class="grid-wraper">
-      {#each data?.institutions?.data as inst}
+      {#each data?.businesses?.data as buis}
         <ImageCard
-          image_url={inst.attributes.header_image.data.attributes.url}
-          link="/institution/{inst.attributes.slug}"
-          alt={inst.attributes.name}
-          content={inst.attributes.name}
+          data_type="business"
+          image_url={buis.attributes.header_image.data.attributes.url}
+          link="/business/{buis.attributes.slug}"
+          alt={buis.attributes.name}
+          content={buis.attributes.name}
         />
       {/each}
     </div>
@@ -65,27 +66,24 @@ export let data;
       <AcordionComponent arr={data?.frequently_asked_questions} />
     {/if}
 
-    {#if data?.business_categories}
+    {#if data?.institution_categories}
       <CategoriesRoundedButtons
         on_click={(e, cat_name) => {
           // businessCategories=
           let searchObject = {};
           console.log(cat_name);
 
-          searchObject.businessCategories = [cat_name];
-          searchObject.filterGroup = "businesses";
+          searchObject.charitiesCategories = [cat_name];
+          searchObject.filterGroup = "charities";
           let searchParams = new URLSearchParams(searchObject);
           let url = "/list?" + searchParams.toString();
           console.log(url);
           goto(url);
         }}
-        data={data?.business_categories?.data.map((cat) => cat.attributes.name)}
+        data={data?.institution_categories?.data.map(
+          (cat) => cat.attributes.name
+        )}
       />
-      <!-- <div class="categories-grid-wraper">
-        {#each data?.business_categories?.data as cat}
-          <span class="cat">{cat.attributes.name}</span>
-        {/each}
-      </div> -->
     {/if}
   </main>
 

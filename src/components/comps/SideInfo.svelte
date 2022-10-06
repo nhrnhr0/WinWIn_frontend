@@ -1,7 +1,7 @@
 <script>
 import { onMount } from "svelte";
 import { gmapsState } from "src/utils/stores/gmapsStore.js";
-import SideOpeningHours from "./SideOpeningHours.svelte";
+// import SideOpeningHours from "./SideOpeningHours.svelte";
 export let gmaps_link = undefined;
 export let location;
 export let opening_hours;
@@ -72,7 +72,7 @@ function initMap() {
     </a>
   </div>
 
-  <SideOpeningHours {opening_hours} />
+  <!-- <SideOpeningHours {opening_hours} /> -->
 </div>
 
 <style lang="scss">
