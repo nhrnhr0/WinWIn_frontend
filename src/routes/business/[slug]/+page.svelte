@@ -2,7 +2,9 @@
 import { page } from "$app/stores";
 import AddressHeaderLabel from "../../../components/comps/AddressHeaderLabel.svelte";
 import HeadingHighlights from "../../../components/comps/HeadingHighlights.svelte";
+import ImageCard from "../../../components/comps/ImageCard.svelte";
 import PhotoGallery from "../../../components/comps/PhotoGallery.svelte";
+import SideInfo from "../../../components/comps/SideInfo.svelte";
 import UpperSocialButtons from "../../../components/comps/UpperSocialButtons.svelte";
 import { BACKEND_MEDIA_URL } from "../../../utils/consts";
 export let slug;
@@ -10,7 +12,13 @@ export let data;
 </script>
 
 <div class="page-wraper">
-  <div class="map-and-contact">hey</div>
+  <div class="map-and-contact">
+    <SideInfo
+      location={{ address: data.address, lat: data.lat, lng: data.lng }}
+      gmaps_link={data.contact_info.google_maps}
+      opening_hours={data.opening_hours}
+    />
+  </div>
   <main>
     <div class="header-content-wraper">
       <div class="header-content">
@@ -36,6 +44,19 @@ export let data;
       </div>
       <UpperSocialButtons entry={data} />
     </div>
+
+    <!--instatutions: -->
+    <h2 class="helpers-title">רשימת עמותות שעסק תומך בהם:</h2>
+    <div class="grid-wraper">
+      {#each data?.institutions?.data as inst}
+        <ImageCard
+          image_url={inst.attributes.header_image.data.attributes.url}
+          link="/instatution/{inst.attributes.slug}"
+          alt={inst.attributes.name}
+          content={inst.attributes.name}
+        />
+      {/each}
+    </div>
   </main>
 
   <div class="photo-gallery">
@@ -44,6 +65,14 @@ export let data;
 </div>
 
 <style lang="scss">
+.helpers-title {
+  text-decoration: underline;
+}
+.grid-wraper {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+}
 .page-wraper {
   display: grid;
   // photo gallery | <main> | map+contact
@@ -60,6 +89,7 @@ main {
     max-width: 1300px;
   }
   display: flex;
+  flex-direction: column;
 
   .header-content-wraper {
   }
