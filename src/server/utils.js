@@ -1,14 +1,15 @@
-
-
-import { MeiliSearch } from 'meilisearch'
+import {
+    MeiliSearch
+} from 'meilisearch'
 
 // create a singoleton instance of MeiliSearch client
 let client = undefined;
+// http://52.14.213.58:7700/
 function init_client() {
     if (client === undefined) {
         client = new MeiliSearch({
-            host: 'http://localhost:7700',
-            apiKey: 'masterKey',
+            host: import.meta.env['VITE_MEILISEARCH_HOST'],
+            apiKey: import.meta.env['VITE_MEILISEARCH_API_KEY']
         })
 
         // client.index('business').updateSettings({
